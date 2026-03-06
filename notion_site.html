@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NotionSetup — Консалтинг и внедрение Notion</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;background:#fff;color:#191919}
+::selection{background:#2383E230}
+input:focus{border-color:#2383E2!important;outline:none}
+input::placeholder{color:#B4B4B0}
+button{font-family:inherit;cursor:pointer}
+a{text-decoration:none;color:inherit}
+.page{display:none}.page.active{display:block}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:all .2s;background:rgba(255,255,255,.7);border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(255,255,255,.97);border-bottom-color:rgba(0,0,0,.06)}
+.nav-inner{max-width:1120px;margin:0 auto;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nav-left{display:flex;align-items:center;gap:20px}
+.nav-logo{cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;letter-spacing:-.01em}
+.nav-links{display:flex;gap:2px}
+.nav-btn{background:none;border:none;padding:6px 12px;border-radius:6px;font-size:14px;color:#37352F;font-weight:500;transition:background .15s;display:flex;align-items:center;gap:4px}
+.nav-btn:hover,.nav-btn.active{background:rgba(0,0,0,.04)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.lang-btn{background:none;border:1px solid rgba(0,0,0,.08);padding:5px 10px;border-radius:6px;font-size:13px;color:#37352F;font-weight:500;display:flex;align-items:center;gap:5px}
+.cta-btn{background:#191919;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:13.5px;font-weight:600;letter-spacing:-.01em;transition:opacity .15s}
+.cta-btn:hover{opacity:.85}
+
+/* Dropdown */
+.dropdown{position:relative}
+.dropdown-panel{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,.08);box-shadow:0 8px 32px rgba(0,0,0,.1),0 1px 3px rgba(0,0,0,.05);padding:8px;width:320px;z-index:100;animation:fadeIn .15s ease}
+.dropdown.open .dropdown-panel{display:block}
+.dropdown-item{display:flex;gap:14px;padding:12px 14px;border-radius:8px;cursor:pointer;transition:background .12s}
+.dropdown-item:hover{background:#F7F6F3}
+.dropdown-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.dropdown-sep{height:1px;background:rgba(0,0,0,.06);margin:4px 14px}
+.chevron{transition:transform .2s}
+.dropdown.open .chevron{transform:rotate(180deg)}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTIONS */
+.section{padding:80px 0}.container{max-width:1120px;margin:0 auto;padding:0 24px}
+.label{font-size:14px;font-weight:600;margin-bottom:8px}
+.title{font-size:42px;font-weight:700;color:#191919;letter-spacing:-.035em;line-height:1.1;margin-bottom:48px}
+.bg-white{background:#fff}.bg-gray{background:#F7F6F3}
+
+/* HERO */
+.hero{padding-top:140px;padding-bottom:80px;text-align:center;background:linear-gradient(180deg,#fff,#F7F6F3)}
+.hero h1{font-size:72px;font-weight:700;letter-spacing:-.045em;line-height:1.05;margin-bottom:20px}
+.hero p{font-size:20px;color:#787774;line-height:1.55;max-width:540px;margin:0 auto 36px;letter-spacing:-.01em}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(35,131,226,.08);border-radius:100px;padding:5px 14px 5px 6px;margin-bottom:28px}
+.badge-dot{width:20px;height:20px;border-radius:5px;background:#2383E2;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800}
+.badge span:last-child{font-size:13px;font-weight:600;color:#2383E2}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:#2383E2;color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
+.btn-secondary{background:#fff;color:#191919;border:1px solid rgba(0,0,0,.1);padding:10px 22px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:-.01em}
+
+/* MOCKUP */
+.mockup{max-width:900px;margin:60px auto 0;background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,.08);box-shadow:0 8px 40px rgba(0,0,0,.06),0 1px 3px rgba(0,0,0,.04);overflow:hidden}
+.mockup-chrome{padding:10px 16px;border-bottom:1px solid rgba(0,0,0,.06);display:flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;opacity:.8}
+.mockup-body{display:flex;height:320px}
+.mockup-sidebar{width:220px;border-right:1px solid rgba(0,0,0,.06);padding:16px 12px;background:#FBFAF9}
+.sidebar-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;margin-bottom:2px;font-size:14px;color:#787774}
+.sidebar-item.active{background:rgba(0,0,0,.04);color:#191919;font-weight:600}
+.mockup-main{flex:1;padding:24px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat-card{background:#F7F6F3;border-radius:8px;padding:16px}
+.stat-card .label2{font-size:12px;color:#787774;margin-bottom:4px}
+.stat-card .val{font-size:28px;font-weight:700;letter-spacing:-.02em}
+.kanban{display:flex;gap:8px;margin-top:16px}
+.kanban-col{flex:1;border-radius:6px;padding:8px 12px}
+.kanban-col h5{font-size:11px;font-weight:600;color:#37352F;margin-bottom:6px}
+.kanban-card{background:#fff;border-radius:4px;padding:6px 8px;margin-bottom:4px;font-size:12px;color:#787774;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+
+/* BENTO 2x2 */
+.bento-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.bento-card{background:#fff;border-radius:14px;border:1px solid rgba(0,0,0,.08);overflow:hidden;transition:transform .2s,box-shadow .2s;cursor:pointer}
+.bento-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.bento-preview{padding:24px 24px 0}
+.bento-inner{background:#F7F6F3;border-radius:10px;padding:16px;border:1px solid rgba(0,0,0,.04)}
+.bento-dots{display:flex;gap:6px;margin-bottom:12px}
+.bento-dots span{width:7px;height:7px;border-radius:50%;opacity:.6}
+.bento-text{padding:20px 24px 28px}
+.bento-text h3{font-size:20px;font-weight:700;margin-bottom:8px;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.bento-text p{font-size:15px;color:#787774;line-height:1.6}
+
+/* PROCESS */
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(0,0,0,.06);border-radius:12px;overflow:hidden}
+.process-step{background:#fff;padding:28px}
+.process-num{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#37352F;margin-bottom:16px}
+.process-step h3{font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+.process-step p{font-size:14px;color:#787774;line-height:1.6}
+
+/* DIRECTIONS */
+.dir-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dir-card{border-radius:14px;padding:40px;cursor:pointer;transition:all .25s;border:1px solid;position:relative;overflow:hidden}
+.dir-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.06)}
+.dir-tag{display:inline-block;font-size:12px;font-weight:700;padding:4px 12px;border-radius:100px;margin-bottom:20px}
+.dir-card h3{font-size:28px;font-weight:700;margin-bottom:12px;letter-spacing:-.03em}
+.dir-card>p{font-size:15px;color:#787774;line-height:1.6;margin-bottom:24px}
+.dir-features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:28px}
+.dir-feat{display:flex;align-items:center;gap:8px;font-size:14px;color:#37352F}
+.dir-cta{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600}
+
+/* CASES compact */
+.cases-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px}
+.cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.case-card{background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.06);transition:all .2s;cursor:pointer}
+.case-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.case-strip{height:3px}
+.case-body{padding:24px 24px 20px}
+.case-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.case-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.case-company{font-size:15px;font-weight:700;line-height:1.2}
+.case-industry{font-size:12px;color:#B4B4B0}
+.case-result{border-radius:8px;padding:12px 14px;margin-bottom:16px}
+.case-result-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.case-result-text{font-size:14px;color:#37352F;line-height:1.5}
+.case-quote{display:flex;gap:10px;align-items:flex-start}
+.case-quote p{font-size:13px;color:#787774;line-height:1.5;font-style:italic;margin-bottom:4px}
+.case-quote .person{font-size:12px;font-weight:600;color:#B4B4B0}
+
+/* ABOUT */
+.about-stats{display:flex;justify-content:center;gap:32px}
+.about-stat .val{font-size:32px;font-weight:800;letter-spacing:-.03em}
+.about-stat .lbl{font-size:13px;color:#787774}
+
+/* CONTACT */
+.contact{padding:80px 0 100px;background:#fff}
+.contact-inner{max-width:520px;margin:0 auto;text-align:center}
+.contact-inner h2{font-size:38px;font-weight:700;letter-spacing:-.035em;line-height:1.1;margin-bottom:12px}
+.contact-inner>p{font-size:16px;color:#787774;line-height:1.6;margin-bottom:36px}
+.contact-form{display:flex;flex-direction:column;gap:12px;text-align:left}
+.contact-form input{padding:12px 14px;border-radius:8px;border:1px solid rgba(0,0,0,.1);font-size:15px;background:#F7F6F3;color:#191919;transition:border .2s;font-family:inherit}
+.contact-form button{padding:13px 24px;border-radius:8px;border:none;background:#2383E2;color:#fff;font-size:15px;font-weight:600;letter-spacing:-.01em;transition:opacity .15s}
+.contact-form button:hover{opacity:.9}
+.contact-note{font-size:12px;color:#B4B4B0;text-align:center;margin-top:4px}
+
+/* FOOTER */
+footer{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:48px 0 32px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-col h4{font-size:13px;font-weight:600;margin-bottom:16px}
+.footer-col p,.footer-col a{display:block;font-size:14px;color:#787774;margin-bottom:8px;cursor:pointer}
+.footer-bottom{border-top:1px solid rgba(0,0,0,.06);padding-top:20px;display:flex;justify-content:space-between;font-size:12px;color:#B4B4B0}
+.footer-links{display:flex;gap:16px}
+
+/* B2B / B2C pages */
+.page-hero{padding-top:140px;padding-bottom:60px;text-align:center}
+.page-hero h1{font-size:56px;font-weight:700;letter-spacing:-.04em;margin-bottom:16px;line-height:1.1}
+.page-hero p{font-size:18px;color:#787774;line-height:1.55}
+.page-badge{display:inline-flex;align-items:center;gap:6px;border-radius:100px;padding:5px 14px;margin-bottom:24px;font-size:13px;font-weight:600}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.simple-card{background:#F7F6F3;border-radius:12px;padding:28px;transition:transform .2s;cursor:pointer}
+.simple-card:hover{transform:translateY(-2px)}
+.simple-card .icon{font-size:32px;margin-bottom:12px}
+.simple-card h3{font-size:17px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+.simple-card p{font-size:14px;color:#787774;line-height:1.6}
+.who-list{display:flex;flex-direction:column;gap:12px;max-width:800px;margin:0 auto}
+.who-item{display:flex;align-items:center;gap:14px;background:#fff;border-radius:10px;padding:16px 20px;border:1px solid rgba(0,0,0,.06)}
+.who-item span{font-size:15px;color:#37352F}
+.template-card{border:1px solid rgba(0,0,0,.08);border-radius:12px;overflow:hidden;transition:all .2s;cursor:pointer;background:#fff}
+.template-card:hover{border-color:rgba(0,0,0,.15);transform:translateY(-2px)}
+.template-icon{height:120px;display:flex;align-items:center;justify-content:center;font-size:48px}
+.template-card .info{padding:16px 20px}
+.template-card h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.template-card p{font-size:13px;color:#787774;line-height:1.5}
+
+/* Full cases page */
+.full-case{background:#fff;border-radius:14px;overflow:hidden;border:1px solid rgba(0,0,0,.08);box-shadow:0 1px 3px rgba(0,0,0,.03);margin-bottom:24px}
+.full-case-bar{height:4px}
+.full-case-body{padding:32px}
+.full-case-header{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.full-case-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+.full-case-col{background:#F7F6F3;border-radius:10px;padding:16px}
+.full-case-col .col-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.full-case-col p{font-size:14px;color:#37352F;line-height:1.55}
+.full-case-quote{border-left:3px solid;padding-left:16px}
+.full-case-quote p{font-size:15px;color:#37352F;line-height:1.6;font-style:italic;margin-bottom:4px}
+.full-case-quote .person{font-size:13px;font-weight:600;color:#B4B4B0}
+
+/* DB Mockup inside bento */
+.mini-db{background:#fff;border-radius:6px;overflow:hidden;border:1px solid rgba(0,0,0,.06)}
+.mini-db-header{display:grid;grid-template-columns:1.2fr .8fr .6fr;border-bottom:1px solid rgba(0,0,0,.06)}
+.mini-db-header span{padding:6px 10px;font-size:11px;font-weight:600;color:#787774}
+.mini-db-row{display:grid;grid-template-columns:1.2fr .8fr .6fr}
+.mini-db-row+.mini-db-row{border-top:1px solid rgba(0,0,0,.04)}
+.mini-db-row span{padding:7px 10px;font-size:12px;color:#37352F}
+.status-badge{font-size:11px!important;font-weight:600;padding:2px 8px;border-radius:4px}
+
+/* Chat mockup */
+.chat-msg{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.chat-msg.right{justify-content:flex-end}
+.chat-avatar{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.chat-bubble{border-radius:8px;padding:8px 12px;font-size:12px;line-height:1.5;max-width:85%}
+
+/* Checklist */
+.checklist-item{display:flex;align-items:center;gap:10px;background:#fff;border-radius:6px;padding:7px 12px;border:1px solid rgba(0,0,0,.04);margin-bottom:6px}
+.check-box{width:16px;height:16px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.check-box.done{background:#2383E2;border:none}
+.check-box.undone{border:1.5px solid #B4B4B0;background:transparent}
+.checklist-item span{font-size:12px}
+.checklist-item span.done{color:#B4B4B0;text-decoration:line-through}
+
+/* Process map */
+.proc-map{display:flex;gap:10px;align-items:center;justify-content:center;padding:8px 0 4px}
+.proc-block{border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600}
+
+@media(max-width:860px){
+  .hero h1,.page-hero h1{font-size:42px!important}
+  .title{font-size:32px!important}
+  .bento-grid,.dir-grid,.cases-grid,.card-grid,.full-case-cols,.process-grid,.stat-grid{grid-template-columns:1fr!important}
+  .footer-grid{grid-template-columns:1fr!important}
+  .nav-links{display:none!important}
+  .mockup-sidebar{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <div class="nav-logo" onclick="navigate('home')">
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none"><path d="M6.017 4.313l55.333-4.087c6.797-.583 8.543-.19 12.817 2.917l17.663 12.443c2.913 2.14 3.883 2.723 3.883 5.053v68.243c0 4.277-1.553 6.807-6.99 7.193L24.467 99.967c-4.08.193-6.023-.39-8.16-3.113L3.3 79.94c-2.333-3.113-3.3-5.443-3.3-8.167V11.113c0-3.497 1.553-6.413 6.017-6.8z" fill="#fff"/><path d="M61.35.227l-55.333 4.087C1.553 4.7 0 7.617 0 11.113v60.66c0 2.723.967 5.053 3.3 8.167l12.997 16.913c2.137 2.723 4.08 3.307 8.16 3.113l64.257-3.89c5.433-.387 6.99-2.917 6.99-7.193V20.64c0-2.21-.81-2.803-3.16-4.53l-.723-.523-17.663-12.443C70.893.037 69.147-.357 62.35.227h-1zm1.857 14.58c.19 0 .36.033.497.09l20.99 3.437c.387.193.677.58.677.967v48.29c0 .58-.29 1.163-.87 1.163l-28.55 1.747c-.387.193-.58.193-.967 0l-3.497-2.917c-.387-.387-.583-.58-.583-.967V21.25c0-.387.193-.773.58-.967L60.51 15c.387-.193.58-.193.773-.193h1.923zM78.33 26.58c0 .58-.29 1.067-.87 1.163l-3.69.677v35.487c-3.207 1.747-6.127 2.723-8.66 2.723-3.983 0-5.053-1.267-8.063-4.957l-15.523-24.347v23.57l7.57 1.743s0 1.163-1.553 1.163l-8.543.487c-.193-.387 0-.967.483-1.163l2.237-.58V31.443l-3.11-.193c-.387-.387-.193-.967.29-1.163l9.413-.677 16.14 24.733V31.637l-6.22-.677c-.193-.58.29-1.163.773-1.163l8.543-.58z" fill="#000"/></svg>
+        <span>NotionSetup</span>
+      </div>
+      <div class="nav-links">
+        <div class="dropdown" id="prodDropdown">
+          <button class="nav-btn" onclick="event.stopPropagation();toggleDropdown()">
+            <span data-t="nav.products"></span>
+            <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5l3 3 3-3" stroke="#787774" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="dropdown-panel">
+            <div class="dropdown-item" onclick="navigate('b2b');closeDropdown()">
+              <div class="dropdown-icon" style="background:linear-gradient(135deg,#D3E5EF,#2383E220)">🏢</div>
+              <div>
+                <div style="font-size:14px;font-weight:600;color:#191919;margin-bottom:2px" data-t="nav.business"></div>
+                <div style="font-size:12px;color:#787774;line-height:1.4" data-t="dropdown.b2b_desc"></div>
+              </div>
+            </div>
+            <div class="dropdown-sep"></div>
+            <div class="dropdown-item" onclick="navigate('b2c');closeDropdown()">
+              <div class="dropdown-icon" style="background:linear-gradient(135deg,#FADEC9,#D9730D20)">✨</div>
+              <div>
+                <div style="font-size:14px;font-weight:600;color:#191919;margin-bottom:2px" data-t="nav.personal"></div>
+                <div style="font-size:12px;color:#787774;line-height:1.4" data-t="dropdown.b2c_desc"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="nav-btn" onclick="navigate('cases')" data-t="nav.cases"></button>
+        <button class="nav-btn" onclick="navigate('home','about')" data-t="nav.about"></button>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="lang-btn" onclick="toggleLang()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><ellipse cx="8" cy="8" rx="3" ry="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M1.5 8h13M2.5 4.5h11M2.5 11.5h11" stroke="currentColor" stroke-width="1.1"/></svg>
+        <span id="langLabel">KZ</span>
+      </button>
+      <button class="cta-btn" onclick="navigate('home','cta')" data-t="nav.cta"></button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HOME PAGE ============ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="badge"><span class="badge-dot">✓</span><span data-t="hero.badge"></span></div>
+      <h1><span data-t="hero.title"></span><br><span data-t="hero.titleAlt"></span></h1>
+      <p data-t="hero.subtitle"></p>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="scrollTo('#cta')"><span data-t="hero.cta1"></span> <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="btn-secondary" onclick="navigate('cases')" data-t="hero.cta2"></button>
+      </div>
+    </div>
+    <!-- Mockup -->
+    <div class="container"><div class="mockup">
+      <div class="mockup-chrome">
+        <div style="display:flex;gap:6px"><div class="dot" style="background:#FF5F57"></div><div class="dot" style="background:#FFBD2E"></div><div class="dot" style="background:#28CA41"></div></div>
+        <div style="flex:1;text-align:center;font-size:12px;color:#B4B4B0">NotionSetup — Workspace</div>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-sidebar">
+          <div class="sidebar-item active"><span>🏠</span> Dashboard</div>
+          <div class="sidebar-item"><span>📋</span> Projects</div>
+          <div class="sidebar-item"><span>👥</span> Team</div>
+          <div class="sidebar-item"><span>📊</span> Analytics</div>
+          <div class="sidebar-item"><span>📝</span> Docs</div>
+          <div class="sidebar-item"><span>⚙️</span> Settings</div>
+        </div>
+        <div class="mockup-main">
+          <div style="font-size:24px;font-weight:700;margin-bottom:20px;letter-spacing:-.02em">🏠 Dashboard</div>
+          <div class="stat-grid">
+            <div class="stat-card"><div class="label2">Active Projects</div><div class="val" style="color:#2383E2">12</div></div>
+            <div class="stat-card"><div class="label2">Team Members</div><div class="val" style="color:#0F7B6C">8</div></div>
+            <div class="stat-card"><div class="label2">Tasks Done</div><div class="val" style="color:#D9730D">94%</div></div>
+          </div>
+          <div class="kanban">
+            <div class="kanban-col" style="background:#D3E5EF"><h5>In Progress</h5><div class="kanban-card">Task 1</div><div class="kanban-card">Task 2</div></div>
+            <div class="kanban-col" style="background:#FDE68A50"><h5>Review</h5><div class="kanban-card">Task 3</div><div class="kanban-card">Task 4</div></div>
+            <div class="kanban-col" style="background:#DBEDDB"><h5>Done</h5><div class="kanban-card">Task 5</div><div class="kanban-card">Task 6</div></div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- BENTO 2x2 -->
+  <section class="section bg-white">
+    <div class="container">
+      <p class="label" style="color:#2383E2" data-t="bento.label"></p>
+      <h2 class="title">Think it. Make it.</h2>
+      <div class="bento-grid" id="bentoGrid"></div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section bg-gray">
+    <div class="container">
+      <p class="label" style="color:#D9730D" data-t="process.label"></p>
+      <h2 class="title" data-t="process.title"></h2>
+      <div class="process-grid" id="processGrid"></div>
+    </div>
+  </section>
+
+  <!-- DIRECTIONS -->
+  <section class="section bg-white">
+    <div class="container">
+      <p class="label" style="color:#6940A5" data-t="directions.label"></p>
+      <h2 class="title" data-t="directions.title"></h2>
+      <div class="dir-grid" id="dirGrid"></div>
+    </div>
+  </section>
+
+  <!-- CASES (compact) -->
+  <section class="section bg-gray" id="home-cases">
+    <div class="container">
+      <div class="cases-header">
+        <div>
+          <p class="label" style="color:#0F7B6C" data-t="cases.label"></p>
+          <h2 class="title" style="margin-bottom:0" data-t="cases.title"></h2>
+        </div>
+        <button class="btn-secondary" onclick="navigate('cases')" style="font-size:14px;padding:8px 16px" data-t="cases.allBtn"> →</button>
+      </div>
+      <div class="cases-grid" id="casesGrid"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section bg-white" id="about">
+    <div class="container" style="max-width:760px;text-align:center">
+      <p class="label" style="color:#6940A5" data-t="nav.about"></p>
+      <h2 class="title" data-t="about.title"></h2>
+      <p style="font-size:17px;color:#787774;line-height:1.65;margin-bottom:32px" data-t="about.desc"></p>
+      <div class="about-stats" id="aboutStats"></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div id="cta"></div>
+</div>
+
+<!-- ============ B2B PAGE ============ -->
+<div class="page" id="page-b2b">
+  <section class="page-hero" style="background:linear-gradient(180deg,#fff,#D3E5EF40)">
+    <div class="container" style="max-width:700px">
+      <div class="page-badge" style="background:rgba(35,131,226,.08);color:#2383E2">🏢 B2B</div>
+      <h1 data-t="b2b.hero"></h1>
+      <p data-t="b2b.heroSub"></p>
+    </div>
+  </section>
+  <section class="section bg-white" style="padding-top:60px"><div class="container"><div class="card-grid" id="b2bGrid"></div></div></section>
+  <section class="section bg-gray"><div class="container">
+    <h2 style="font-size:32px;font-weight:700;letter-spacing:-.03em;margin-bottom:24px" data-t="b2b.whoTitle"></h2>
+    <div class="who-list" id="b2bWho"></div>
+  </div></section>
+</div>
+
+<!-- ============ B2C PAGE ============ -->
+<div class="page" id="page-b2c">
+  <section class="page-hero" style="background:linear-gradient(180deg,#fff,#FADEC940)">
+    <div class="container" style="max-width:700px">
+      <div class="page-badge" style="background:rgba(217,115,13,.1);color:#D9730D">✨ B2C</div>
+      <h1 data-t="b2c.hero"></h1>
+      <p data-t="b2c.heroSub"></p>
+    </div>
+  </section>
+  <section class="section bg-white" style="padding-top:60px"><div class="container">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="background:#DBEDDB;color:#0F7B6C;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px" data-t="b2c.free"></span></div>
+    <h2 style="font-size:32px;font-weight:700;letter-spacing:-.03em;margin-bottom:4px" data-t="b2c.freeLabel"></h2>
+    <p style="font-size:15px;color:#787774;margin-bottom:32px" data-t="b2c.freeSub"></p>
+    <div class="card-grid" id="b2cFree"></div>
+  </div></section>
+  <section class="section bg-gray"><div class="container">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="background:#E8DEEE;color:#6940A5;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px" data-t="b2c.premium"></span></div>
+    <h2 style="font-size:32px;font-weight:700;letter-spacing:-.03em;margin-bottom:4px" data-t="b2c.premLabel"></h2>
+    <p style="font-size:15px;color:#787774;margin-bottom:32px" data-t="b2c.premSub"></p>
+    <div class="card-grid" id="b2cPrem"></div>
+  </div></section>
+</div>
+
+<!-- ============ CASES PAGE ============ -->
+<div class="page" id="page-cases">
+  <section class="page-hero" style="background:linear-gradient(180deg,#fff,#DBEDDB40)">
+    <div class="container" style="max-width:700px">
+      <div class="page-badge" style="background:rgba(15,123,108,.08);color:#0F7B6C">📖 <span data-t="cases.label"></span></div>
+      <h1 data-t="cases.title"></h1>
+      <p data-t="cases.fullSub"></p>
+    </div>
+  </section>
+  <section style="padding:40px 0 80px;background:#fff"><div class="container" style="max-width:800px" id="fullCases"></div></section>
+</div>
+
+<!-- SHARED CONTACT (cloned per page) -->
+<section class="contact" id="contactSection">
+  <div class="contact-inner container">
+    <h2 data-t="cta.title"></h2>
+    <p data-t="cta.subtitle"></p>
+    <div class="contact-form">
+      <input type="text" id="formName" data-ph="cta.name">
+      <input type="tel" id="formPhone" data-ph="cta.phone">
+      <button onclick="submitForm()" id="submitBtn" data-t="cta.submit"></button>
+      <p class="contact-note" data-t="cta.note"></p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <svg width="28" height="28" viewBox="0 0 100 100" fill="none"><path d="M6.017 4.313l55.333-4.087c6.797-.583 8.543-.19 12.817 2.917l17.663 12.443c2.913 2.14 3.883 2.723 3.883 5.053v68.243c0 4.277-1.553 6.807-6.99 7.193L24.467 99.967c-4.08.193-6.023-.39-8.16-3.113L3.3 79.94c-2.333-3.113-3.3-5.443-3.3-8.167V11.113c0-3.497 1.553-6.413 6.017-6.8z" fill="#fff"/><path d="M61.35.227l-55.333 4.087C1.553 4.7 0 7.617 0 11.113v60.66c0 2.723.967 5.053 3.3 8.167l12.997 16.913c2.137 2.723 4.08 3.307 8.16 3.113l64.257-3.89c5.433-.387 6.99-2.917 6.99-7.193V20.64c0-2.21-.81-2.803-3.16-4.53l-.723-.523-17.663-12.443C70.893.037 69.147-.357 62.35.227h-1zm1.857 14.58c.19 0 .36.033.497.09l20.99 3.437c.387.193.677.58.677.967v48.29c0 .58-.29 1.163-.87 1.163l-28.55 1.747c-.387.193-.58.193-.967 0l-3.497-2.917c-.387-.387-.583-.58-.583-.967V21.25c0-.387.193-.773.58-.967L60.51 15c.387-.193.58-.193.773-.193h1.923zM78.33 26.58c0 .58-.29 1.067-.87 1.163l-3.69.677v35.487c-3.207 1.747-6.127 2.723-8.66 2.723-3.983 0-5.053-1.267-8.063-4.957l-15.523-24.347v23.57l7.57 1.743s0 1.163-1.553 1.163l-8.543.487c-.193-.387 0-.967.483-1.163l2.237-.58V31.443l-3.11-.193c-.387-.387-.193-.967.29-1.163l9.413-.677 16.14 24.733V31.637l-6.22-.677c-.193-.58.29-1.163.773-1.163l8.543-.58z" fill="#000"/></svg>
+          <span style="font-weight:700;font-size:15px">NotionSetup</span>
+        </div>
+        <p data-t="footer.desc"></p>
+      </div>
+      <div class="footer-col"><h4 data-t="footer.services"></h4><p>Аудит</p><p>Внедрение</p><p>AI</p><p>Обучение</p><p>Шаблоны</p></div>
+      <div class="footer-col"><h4 data-t="footer.company"></h4><p onclick="navigate('cases')" data-t="nav.cases"></p><p onclick="navigate('home','about')" data-t="nav.about"></p><p>Blog</p></div>
+      <div class="footer-col"><h4 data-t="footer.contact"></h4><p>Telegram: @notionsetup</p><p>hello@notionsetup.kz</p></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NotionSetup. <span data-t="footer.disclaimer"></span></span>
+      <div class="footer-links"><a href="#">Twitter</a><a href="#">YouTube</a><a href="#">Telegram</a><a href="#">Instagram</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============ TRANSLATIONS ============
+const T={
+ru:{
+"nav.products":"Продукты","nav.business":"Для бизнеса","nav.personal":"Для всех","nav.cases":"Кейсы","nav.about":"О нас","nav.cta":"Обсудить проект",
+"dropdown.b2b_desc":"Консалтинг, внедрение, обучение команд","dropdown.b2c_desc":"Готовые шаблоны, курсы, гайды",
+"hero.badge":"Notion Certified Partner","hero.title":"Ваш бизнес.","hero.titleAlt":"Ваша система.",
+"hero.subtitle":"Строим рабочие пространства в Notion, которые объединяют команду, автоматизируют рутину и наводят порядок в хаосе.",
+"hero.cta1":"Обсудить проект","hero.cta2":"Смотреть кейсы",
+"bento.label":"Что мы делаем",
+"process.label":"Как это работает","process.title":"От хаоса к системе за 4 шага",
+"directions.label":"Два направления","directions.title":"Выберите свой путь",
+"cases.label":"Кейсы","cases.title":"Компании, которые уже работают в Notion","cases.allBtn":"Все кейсы","cases.fullSub":"Реальные истории компаний, которые навели порядок с Notion",
+"about.title":"Мы живём в Notion","about.desc":"Вся наша жизнь — личная и рабочая — построена в Notion. Мы не просто настраиваем инструмент — мы трансформируем процессы, опираясь на опыт сотен внедрений. Notion Certified Partner с глубоким пониманием бизнес-процессов.",
+"cta.title":"Готовы навести порядок?","cta.subtitle":"Запишитесь на бесплатный 30-минутный звонок. Разберёмся в процессах и покажем, как Notion может всё изменить.",
+"cta.name":"Имя","cta.phone":"Телефон","cta.submit":"Отправить заявку","cta.note":"Ответим в течение 24 часов",
+"footer.desc":"Консалтинг и внедрение Notion для бизнеса и частных клиентов.","footer.services":"Услуги","footer.company":"Компания","footer.contact":"Контакты","footer.disclaimer":"Не аффилирован с Notion Labs Inc.",
+"b2b.hero":"Notion для бизнеса","b2b.heroSub":"Строим операционные системы на базе Notion, которые масштабируются вместе с вашей командой.","b2b.whoTitle":"Для кого",
+"b2c.hero":"Шаблоны Notion","b2c.heroSub":"Готовые системы, которые работают. Скачай, адаптируй, пользуйся.",
+"b2c.free":"Бесплатно","b2c.premium":"Премиум","b2c.freeLabel":"Бесплатные шаблоны","b2c.freeSub":"Попробуйте наши лучшие шаблоны бесплатно. Без регистрации.","b2c.premLabel":"Премиум-системы","b2c.premSub":"Полноценные рабочие системы с автоматизациями, документацией и видеогайдами.",
+"result":"Результат","problem":"Проблема","solution":"Решение",
+},
+kz:{
+"nav.products":"Өнімдер","nav.business":"Бизнеске","nav.personal":"Барлығына","nav.cases":"Кейстер","nav.about":"Біз туралы","nav.cta":"Жобаны талқылау",
+"dropdown.b2b_desc":"Консалтинг, енгізу, командаларды оқыту","dropdown.b2c_desc":"Дайын үлгілер, курстар, нұсқаулықтар",
+"hero.badge":"Notion Certified Partner","hero.title":"Сіздің бизнес.","hero.titleAlt":"Сіздің жүйе.",
+"hero.subtitle":"Notion-да жұмыс кеңістіктерін құрамыз — команданы біріктіреміз, күнделікті жұмысты автоматтандырамыз, тәртіп орнатамыз.",
+"hero.cta1":"Жобаны талқылау","hero.cta2":"Кейстерді көру",
+"bento.label":"Біз не істейміз",
+"process.label":"Қалай жұмыс істейді","process.title":"Хаостан жүйеге 4 қадамда",
+"directions.label":"Екі бағыт","directions.title":"Өз жолыңызды таңдаңыз",
+"cases.label":"Кейстер","cases.title":"Notion-да жұмыс істеп жатқан компаниялар","cases.allBtn":"Барлық кейстер","cases.fullSub":"Notion көмегімен тәртіп орнатқан компаниялардың нақты тарихтары",
+"about.title":"Біз Notion-да өмір сүреміз","about.desc":"Біздің бүкіл өміріміз — жеке және жұмыс — Notion-да құрылған. Біз құралды жай баптамаймыз — жүздеген енгізу тәжірибесіне сүйене отырып, процестерді өзгертеміз.",
+"cta.title":"Тәртіп орнатуға дайынсыз ба?","cta.subtitle":"Тегін 30 минуттық қоңырауға жазылыңыз. Процестерді талдаймыз және Notion қалай көмектесетінін көрсетеміз.",
+"cta.name":"Аты","cta.phone":"Телефон","cta.submit":"Өтінім жіберу","cta.note":"24 сағат ішінде жауап береміз",
+"footer.desc":"Бизнес және жеке клиенттерге арналған Notion консалтингі мен енгізу.","footer.services":"Қызметтер","footer.company":"Компания","footer.contact":"Байланыс","footer.disclaimer":"Notion Labs Inc. компаниясымен байланысты емес.",
+"b2b.hero":"Бизнеске арналған Notion","b2b.heroSub":"Notion негізінде командаңызбен бірге масштабталатын операциялық жүйелер құрамыз.","b2b.whoTitle":"Кімдерге",
+"b2c.hero":"Notion үлгілері","b2c.heroSub":"Жұмыс істейтін дайын жүйелер. Жүктеңіз, бейімдеңіз, пайдаланыңыз.",
+"b2c.free":"Тегін","b2c.premium":"Премиум","b2c.freeLabel":"Тегін үлгілер","b2c.freeSub":"Ең жақсы үлгілерімізді тегін қолданып көріңіз. Тіркелусіз.","b2c.premLabel":"Премиум-жүйелер","b2c.premSub":"Автоматтандырулар, құжаттама және бейне нұсқаулықтар қамтылған толыққанды жұмыс жүйелері.",
+"result":"Нәтиже","problem":"Мәселе","solution":"Шешім",
+}};
+
+// ============ DATA ============
+const DATA={
+bento:{ru:[
+{title:"Аудит процессов",desc:"Интервью с командой, маппинг процессов, архитектура будущего воркспейса."},
+{title:"Внедрение",desc:"Строим систему под ваш бизнес: базы данных, автоматизации, интеграции."},
+{title:"Notion AI и агенты",desc:"Настройка AI-агентов, промптов, автоматизация рутинных задач."},
+{title:"Обучение",desc:"Воркшопы, видеоинструкции — чтобы команда работала в Notion самостоятельно."},
+],kz:[
+{title:"Процестерді аудит",desc:"Команда сұхбаты, процестер картасы, болашақ жұмыс кеңістігінің архитектурасы."},
+{title:"Енгізу",desc:"Бизнесіңізге жүйе құрамыз: дерекқорлар, автоматтандыру, интеграциялар."},
+{title:"Notion AI және агенттер",desc:"AI-агенттерді баптау, промпттар, күнделікті тапсырмаларды автоматтандыру."},
+{title:"Оқыту",desc:"Воркшоптар, бейне нұсқаулықтар — команда Notion-да өздігінен жұмыс істесін."},
+]},
+process:{ru:[
+{title:"Дискавери-звонок",desc:"30 минут. Разбираемся в вашем бизнесе, целях и текущих инструментах. Бесплатно."},
+{title:"Глубинное интервью",desc:"Маппинг всех процессов, ролей и потоков информации. 1.5–2 часа с ключевыми людьми."},
+{title:"Проектирование и сборка",desc:"Создаём архитектуру и строим систему. Базы данных, вьюшки, автоматизации."},
+{title:"Обучение и запуск",desc:"Передаём систему команде. Воркшоп + документация + поддержка."},
+],kz:[
+{title:"Дискавери-қоңырау",desc:"30 минут. Бизнесіңізді, мақсаттарыңызды және ағымдағы құралдарды түсінеміз. Тегін."},
+{title:"Тереңдетілген сұхбат",desc:"Барлық процестер, рөлдер мен ақпарат ағындарын картаға түсіру. 1.5–2 сағат."},
+{title:"Жобалау және құрастыру",desc:"Архитектура құрамыз және жүйені саламыз. Дерекқорлар, автоматтандырулар."},
+{title:"Оқыту және іске қосу",desc:"Жүйені командаға тапсырамыз. Воркшоп + құжаттама + қолдау."},
+]},
+directions:{ru:{b2b:{tag:"Для бизнеса",title:"Консалтинг и внедрение",desc:"Интервью с командой, аудит процессов, проектирование архитектуры и полное внедрение Notion под ваш бизнес.",features:["Глубинное интервью","Аудит процессов","Архитектура воркспейса","Внедрение и настройка","Обучение команды","Ongoing-поддержка"],cta:"Обсудить проект"},b2c:{tag:"Для всех",title:"Готовые шаблоны",desc:"Проверенные системы в Notion, которые можно скачать и начать использовать прямо сейчас.",features:["Second Brain","CRM для фрилансера","Контент-календарь","Планировщик целей","Project Hub","Студенческий хаб"],cta:"Смотреть шаблоны"}},
+kz:{b2b:{tag:"Бизнеске",title:"Консалтинг және енгізу",desc:"Команда сұхбаты, процестер аудиті, архитектура жобалау және Notion-ды бизнесіңізге толық енгізу.",features:["Тереңдетілген сұхбат","Процестер аудиті","Жұмыс кеңістігі архитектурасы","Енгізу және баптау","Команданы оқыту","Тұрақты қолдау"],cta:"Жобаны талқылау"},b2c:{tag:"Барлығына",title:"Дайын үлгілер",desc:"Notion-дағы тексерілген жүйелер — жүктеп алып, бірден пайдалана бастаңыз.",features:["Second Brain","Фрилансер CRM","Контент күнтізбесі","Мақсат жоспарлағыш","Project Hub","Студенттік хаб"],cta:"Үлгілерді көру"}}},
+cases:{ru:[
+{company:"Digital-агентство «Spark»",industry:"Маркетинг · 25 человек",problem:"Задачи терялись между Trello, Google Docs и мессенджерами.",solution:"Построили единый Project Hub с CRM и клиентскими порталами.",result:"Время на согласования сократилось на 60%. Онбординг — 1 день вместо недели.",quote:"Впервые за 3 года у нас полный порядок.",person:"Аслан М., CEO",color:"#2383E2"},
+{company:"EdTech-стартап «StepUp»",industry:"Образование · 12 человек",problem:"Курсы, студенты, преподаватели — всё в разных таблицах.",solution:"Собрали операционную систему: курсы, студенты, HR, финансы — всё связано.",result:"Экономия 4 часа в неделю. Запустили 3 новых курса за месяц.",quote:"Notion стал нашей операционной системой.",person:"Дана К., COO",color:"#0F7B6C"},
+{company:"Продакшн-студия «Frame»",industry:"Видеопродакшн · 8 человек",problem:"Проекты ведутся в чатах, брифы теряются.",solution:"Внедрили систему управления проектами с клиентскими порталами.",result:"Клиенты видят статус в реальном времени. «А что по проекту?» — ноль.",quote:"Клиенты в восторге от порталов.",person:"Тимур Р., основатель",color:"#D9730D"},
+],kz:[
+{company:"Digital-агенттік «Spark»",industry:"Маркетинг · 25 адам",problem:"Тапсырмалар Trello, Google Docs және мессенджерлер арасында жоғалды.",solution:"CRM және клиент порталдары бар бірыңғай Project Hub құрдық.",result:"Келісу уақыты 60%-ға қысқарды. Бейімдеу — 1 күн.",quote:"3 жылда алғаш рет толық тәртіп орнады.",person:"Аслан М., CEO",color:"#2383E2"},
+{company:"EdTech-стартап «StepUp»",industry:"Білім · 12 адам",problem:"Курстар, студенттер, оқытушылар — бәрі әртүрлі кестелерде.",solution:"Операциялық жүйе құрдық: курстар, студенттер, HR, қаржы — бәрі байланысты.",result:"Аптасына 4 сағат үнемдеу. 1 айда 3 жаңа курс.",quote:"Notion біздің операциялық жүйемізге айналды.",person:"Дана К., COO",color:"#0F7B6C"},
+{company:"Продакшн-студия «Frame»",industry:"Бейнепродакшн · 8 адам",problem:"Жобалар чаттарда жүргізіледі, бриф жоғалады.",solution:"Notion Sites арқылы клиент порталдары бар жүйе енгіздік.",result:"Клиенттер статусты нақты уақытта көреді.",quote:"Клиенттер порталдардан қуанышты.",person:"Тимур Р., негізін қалаушы",color:"#D9730D"},
+]},
+b2b:{ru:[
+{icon:"📋",title:"Company Wiki",desc:"Единая база знаний: онбординг, политики, процессы, оргструктура."},
+{icon:"📊",title:"Project Hub",desc:"Канбан-доски, таймлайны, спринты. Все проекты в одном месте."},
+{icon:"🤝",title:"CRM",desc:"Воронка продаж, контакты, сделки, follow-up."},
+{icon:"👥",title:"HR-система",desc:"Сотрудники, онбординг-чеклисты, отпуска, 1-на-1, OKR."},
+{icon:"📝",title:"Контент-машина",desc:"Контент-календарь, редакционный процесс, медиа-библиотека."},
+{icon:"🤖",title:"AI и автоматизации",desc:"Notion AI агенты, MCP-коннекторы, интеграции через API."},
+],kz:[
+{icon:"📋",title:"Company Wiki",desc:"Біртұтас білім базасы: бейімдеу, саясаттар, процестер."},
+{icon:"📊",title:"Project Hub",desc:"Канбан-тақталар, уақыт шкалалары, спринттер."},
+{icon:"🤝",title:"CRM",desc:"Сату воронкасы, контактілер, мәмілелер."},
+{icon:"👥",title:"HR-жүйе",desc:"Қызметкерлер, бейімдеу тізімдері, демалыстар."},
+{icon:"📝",title:"Контент-машина",desc:"Контент күнтізбесі, редакциялық процесс."},
+{icon:"🤖",title:"AI және автоматтандыру",desc:"Notion AI агенттері, MCP-коннекторлар."},
+]},
+b2bWho:{ru:["Стартапы и IT-компании (5–100 человек)","Маркетинговые агентства и студии","Образовательные проекты","E-commerce и D2C-бренды","Консалтинговые компании"],kz:["Стартаптар және IT-компаниялар (5–100 адам)","Маркетинг агенттіктері мен студиялар","Білім беру жобалары","E-commerce және D2C-брендтер","Консалтинг компаниялар"]},
+b2c:{ru:[
+{icon:"🧠",name:"Second Brain",desc:"Система управления знаниями, заметками и идеями."},
+{icon:"💼",name:"CRM для фрилансера",desc:"Клиенты, проекты, счета — всё в одном месте."},
+{icon:"📝",name:"Контент-календарь",desc:"Планирование, создание и публикация контента."},
+{icon:"🎯",name:"Планировщик целей",desc:"OKR, привычки, трекер прогресса."},
+{icon:"📊",name:"Project Hub",desc:"Управление проектами с канбаном и статусами."},
+{icon:"📚",name:"Студенческий хаб",desc:"Расписание, конспекты, задания, ресурсы."},
+],kz:[
+{icon:"🧠",name:"Second Brain",desc:"Білімді, жазбаларды және идеяларды басқару жүйесі."},
+{icon:"💼",name:"Фрилансер CRM",desc:"Клиенттер, жобалар, шоттар — бәрі бір жерде."},
+{icon:"📝",name:"Контент күнтізбесі",desc:"Контентті жоспарлау, жасау және жариялау."},
+{icon:"🎯",name:"Мақсат жоспарлағыш",desc:"OKR, әдеттер, прогресс трекері."},
+{icon:"📊",name:"Project Hub",desc:"Канбан арқылы жобаларды басқару."},
+{icon:"📚",name:"Студенттік хаб",desc:"Кесте, конспектілер, тапсырмалар."},
+]},
+aboutStats:{ru:[{val:"100+",label:"проектов"},{val:"50+",label:"компаний"},{val:"5 лет",label:"в Notion"}],kz:[{val:"100+",label:"жоба"},{val:"50+",label:"компания"},{val:"5 жыл",label:"Notion-да"}]},
+};
+
+const AVATARS=[
+'<svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#D3E5EF"/><circle cx="18" cy="15" r="6" fill="#191919" opacity=".12"/><ellipse cx="18" cy="28" rx="9" ry="7" fill="#191919" opacity=".08"/><circle cx="15" cy="14" r="1.2" fill="#191919"/><circle cx="21" cy="14" r="1.2" fill="#191919"/><path d="M15.5 17.5Q18 19.5 20.5 17.5" stroke="#191919" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M10 12Q18 6 26 12" stroke="#191919" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>',
+'<svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#DBEDDB"/><circle cx="18" cy="15" r="6" fill="#191919" opacity=".12"/><ellipse cx="18" cy="28" rx="9" ry="7" fill="#191919" opacity=".08"/><circle cx="14.5" cy="14" r="3" stroke="#191919" stroke-width="1.2" fill="none"/><circle cx="21.5" cy="14" r="3" stroke="#191919" stroke-width="1.2" fill="none"/><path d="M17.5 14h1" stroke="#191919" stroke-width="1"/><circle cx="14.5" cy="14" r="1" fill="#191919"/><circle cx="21.5" cy="14" r="1" fill="#191919"/><path d="M15.5 18Q18 19.5 20.5 18" stroke="#191919" stroke-width="1" fill="none" stroke-linecap="round"/></svg>',
+'<svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#FADEC9"/><circle cx="18" cy="15" r="6" fill="#191919" opacity=".12"/><ellipse cx="18" cy="28" rx="9" ry="7" fill="#191919" opacity=".08"/><circle cx="15" cy="14" r="1.2" fill="#191919"/><circle cx="21" cy="14" r="1.2" fill="#191919"/><path d="M16 17.5Q18 19 20 17.5" stroke="#191919" stroke-width="1" fill="none" stroke-linecap="round"/><rect x="10" y="10" width="16" height="2.5" rx="1.2" fill="#D9730D" opacity=".4"/></svg>',
+];
+const ICONS_BENTO=[
+'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#191919" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="#191919" stroke-width="2" stroke-linecap="round"/></svg>',
+'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 21h18M5 21V7l7-4 7 4v14" stroke="#191919" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="9" y="13" width="6" height="8" rx=".5" stroke="#191919" stroke-width="1.5"/></svg>',
+'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16.4l-6.4 4.8 2.4-7.2-6-4.8h7.6z" stroke="#191919" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 016.5 17H20" stroke="#191919" stroke-width="2" stroke-linecap="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" stroke="#191919" stroke-width="2"/></svg>',
+];
+const CHECK='<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const BENTO_PREVIEWS=[
+// Audit - process map
+'<div class="proc-map"><div class="proc-block" style="background:#2383E218;border:1.5px solid #2383E240;color:#2383E2">Sales</div><svg width="16" height="10" viewBox="0 0 16 10"><path d="M0 5h12M10 1l4 4-4 4" stroke="#B4B4B0" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg><div class="proc-block" style="background:#0F7B6C18;border:1.5px solid #0F7B6C40;color:#0F7B6C">Ops</div><svg width="16" height="10" viewBox="0 0 16 10"><path d="M0 5h12M10 1l4 4-4 4" stroke="#B4B4B0" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg><div class="proc-block" style="background:#D9730D18;border:1.5px solid #D9730D40;color:#D9730D">HR</div></div>',
+// Build - mini DB
+'<div class="mini-db"><div class="mini-db-header"><span>Project</span><span>Status</span><span>Owner</span></div><div class="mini-db-row"><span>Website Redesign</span><span><span class="status-badge" style="color:#2383E2;background:#2383E215">In Progress</span></span><span style="color:#787774">AK</span></div><div class="mini-db-row"><span>CRM Setup</span><span><span class="status-badge" style="color:#0F7B6C;background:#0F7B6C15">Done</span></span><span style="color:#787774">DK</span></div><div class="mini-db-row"><span>AI Integration</span><span><span class="status-badge" style="color:#D9730D;background:#D9730D15">Planning</span></span><span style="color:#787774">TR</span></div></div>',
+// AI - chat
+'<div id="bentoChat"></div>',
+// Train - checklist
+'<div id="bentoChecklist"></div>',
+];
+
+// ============ STATE ============
+let lang='ru', page='home';
+
+// ============ FUNCTIONS ============
+function gt(key){return T[lang][key]||key}
+
+function applyTranslations(){
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const k=el.getAttribute('data-t');
+    const v=gt(k);if(v)el.textContent=v;
+  });
+  document.querySelectorAll('[data-ph]').forEach(el=>{
+    el.placeholder=gt(el.getAttribute('data-ph'));
+  });
+  document.getElementById('langLabel').textContent=lang==='ru'?'KZ':'RU';
+}
+
+function renderDynamic(){
+  const l=lang;
+  // Bento
+  const bg=document.getElementById('bentoGrid');
+  bg.innerHTML=DATA.bento[l].map((b,i)=>`<div class="bento-card"><div class="bento-preview"><div class="bento-inner"><div class="bento-dots"><span style="background:#FF5F57"></span><span style="background:#FFBD2E"></span><span style="background:#28CA41"></span></div>${BENTO_PREVIEWS[i]}</div></div><div class="bento-text"><h3>${ICONS_BENTO[i]} ${b.title}</h3><p>${b.desc}</p></div></div>`).join('');
+  // Chat mockup
+  const chatEl=document.getElementById('bentoChat');
+  if(chatEl){
+    const aiMsg=l==='ru'?'Создал отчёт по проектам за Q1. Нашёл 3 просроченных задачи.':'Q1 бойынша барлық жобалар есебін жасадым. 3 мерзімі өткен тапсырма таптым.';
+    const userMsg=l==='ru'?'Назначь ответственных и напомни им':'Жауаптыларды тағайында және еске сал';
+    chatEl.innerHTML=`<div class="chat-msg"><div class="chat-avatar" style="background:#E8DEEE">✨</div><div class="chat-bubble" style="background:#fff;border:1px solid rgba(0,0,0,.06);color:#37352F">${aiMsg}</div></div><div class="chat-msg right"><div class="chat-bubble" style="background:#2383E2;color:#fff">${userMsg}</div><div class="chat-avatar" style="background:#D3E5EF">👤</div></div>`;
+  }
+  // Checklist
+  const clEl=document.getElementById('bentoChecklist');
+  if(clEl){
+    const items=l==='ru'?['Основы Notion для команды','Работа с базами данных','Автоматизации и формулы','Notion AI для задач']:['Команда үшін Notion негіздері','Дерекқорлармен жұмыс','Автоматтандырулар мен формулалар','Күнделікті тапсырмалар үшін AI'];
+    clEl.innerHTML=items.map((t,i)=>`<div class="checklist-item"><div class="check-box ${i<2?'done':'undone'}">${i<2?'<svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</div><span class="${i<2?'done':''}">${t}</span></div>`).join('');
+  }
+  // Process
+  const pg=document.getElementById('processGrid');
+  const pcolors=['#D3E5EF','#FADEC9','#E8DEEE','#DBEDDB'];
+  pg.innerHTML=DATA.process[l].map((s,i)=>`<div class="process-step"><div class="process-num" style="background:${pcolors[i]}">${i+1}</div><h3>${s.title}</h3><p>${s.desc}</p></div>`).join('');
+  // Directions
+  const dg=document.getElementById('dirGrid');
+  const dirs=DATA.directions[l];
+  dg.innerHTML=[['b2b','#2383E2','#D3E5EF30','rgba(35,131,226,.15)'],['b2c','#D9730D','#FADEC930','rgba(217,115,13,.15)']].map(([k,c,bg,bc],i)=>{
+    const d=dirs[k];
+    return`<div class="dir-card" style="background:${bg};border-color:${bc}" onclick="navigate('${k}')"><span class="dir-tag" style="color:${c};background:${c}18">${d.tag}</span><h3>${d.title}</h3><p>${d.desc}</p><div class="dir-features">${d.features.map(f=>`<div class="dir-feat"><span style="color:${c}">${CHECK}</span><span>${f}</span></div>`).join('')}</div><div class="dir-cta" style="color:${c}">${d.cta} <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>`;
+  }).join('');
+  // Cases compact
+  const cg=document.getElementById('casesGrid');
+  const emojis=['🏢','🎓','🎬'];
+  cg.innerHTML=DATA.cases[l].map((c,i)=>`<div class="case-card" onclick="navigate('cases')"><div class="case-strip" style="background:${c.color}"></div><div class="case-body"><div class="case-header"><div class="case-icon" style="background:${c.color}15">${emojis[i]}</div><div><div class="case-company">${c.company}</div><div class="case-industry">${c.industry}</div></div></div><div class="case-result" style="background:${c.color}08;border:1px solid ${c.color}15"><div class="case-result-label" style="color:${c.color}">${gt('result')}</div><div class="case-result-text">${c.result}</div></div><div class="case-quote">${AVATARS[i]}<div style="flex:1"><p>«${c.quote}»</p><span class="person">${c.person}</span></div></div></div></div>`).join('');
+  // About
+  const as=document.getElementById('aboutStats');
+  as.innerHTML=DATA.aboutStats[l].map(s=>`<div class="about-stat"><div class="val">${s.val}</div><div class="lbl">${s.label}</div></div>`).join('');
+  // B2B
+  document.getElementById('b2bGrid').innerHTML=DATA.b2b[l].map(s=>`<div class="simple-card"><div class="icon">${s.icon}</div><h3>${s.title}</h3><p>${s.desc}</p></div>`).join('');
+  document.getElementById('b2bWho').innerHTML=DATA.b2bWho[l].map(w=>`<div class="who-item"><span style="color:#0F7B6C">${CHECK}</span><span>${w}</span></div>`).join('');
+  // B2C
+  const cats=DATA.b2c[l];const bgcolors=[['#D3E5EF60','#FADEC960','#E8DEEE60'],['#FDE68A40','#D3E5EF60','#DBEDDB60']];
+  document.getElementById('b2cFree').innerHTML=cats.slice(0,3).map((c,i)=>`<div class="template-card"><div class="template-icon" style="background:${bgcolors[0][i]}">${c.icon}</div><div class="info"><h3>${c.name}</h3><p>${c.desc}</p></div></div>`).join('');
+  document.getElementById('b2cPrem').innerHTML=cats.slice(3).map((c,i)=>`<div class="template-card"><div class="template-icon" style="background:${bgcolors[1][i]}">${c.icon}</div><div class="info"><h3>${c.name}</h3><p>${c.desc}</p></div></div>`).join('');
+  // Full cases
+  const fc=document.getElementById('fullCases');
+  const bigAvatars=AVATARS.map(a=>a.replace(/width="36"/g,'width="44"').replace(/height="36"/g,'height="44"').replace(/r="18"/g,'r="22"').replace(/viewBox="0 0 36 36"/g,'viewBox="0 0 36 36"'));
+  fc.innerHTML=DATA.cases[l].map((c,i)=>`<div class="full-case"><div class="full-case-bar" style="background:${c.color}"></div><div class="full-case-body"><div class="full-case-header">${bigAvatars[i]}<div><h3 style="font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:2px">${c.company}</h3><span style="font-size:14px;color:#787774">${c.industry}</span></div></div><div class="full-case-cols"><div class="full-case-col"><div class="col-label" style="color:#E03E3E">${gt('problem')}</div><p>${c.problem}</p></div><div class="full-case-col"><div class="col-label" style="color:#2383E2">${gt('solution')}</div><p>${c.solution}</p></div><div class="full-case-col"><div class="col-label" style="color:#0F7B6C">${gt('result')}</div><p>${c.result}</p></div></div><div class="full-case-quote" style="border-color:${c.color}"><p>«${c.quote}»</p><span class="person">${c.person}</span></div></div></div>`).join('');
+}
+
+function navigate(p,scrollTarget){
+  if(scrollTarget && p===page){
+    setTimeout(()=>document.getElementById(scrollTarget)?.scrollIntoView({behavior:'smooth'}),50);
+    return;
+  }
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  const target=document.getElementById('page-'+p);
+  if(target)target.classList.add('active');
+  page=p;
+  if(scrollTarget){setTimeout(()=>document.getElementById(scrollTarget)?.scrollIntoView({behavior:'smooth'}),100);}
+  else{window.scrollTo({top:0,behavior:'smooth'});}
+  closeDropdown();
+}
+
+function toggleLang(){
+  lang=lang==='ru'?'kz':'ru';
+  applyTranslations();renderDynamic();
+}
+
+function toggleDropdown(){document.getElementById('prodDropdown').classList.toggle('open')}
+function closeDropdown(){document.getElementById('prodDropdown').classList.remove('open')}
+document.addEventListener('click',closeDropdown);
+
+function submitForm(){
+  const n=document.getElementById('formName').value;
+  const p=document.getElementById('formPhone').value;
+  if(n&&p){
+    const btn=document.getElementById('submitBtn');btn.textContent='✓';
+    document.getElementById('formName').value='';document.getElementById('formPhone').value='';
+    setTimeout(()=>{btn.textContent=gt('cta.submit')},3000);
+  }
+}
+
+// NAV scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>10);
+});
+
+// INIT
+applyTranslations();renderDynamic();
+</script>
+</body>
+</html>
