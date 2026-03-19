@@ -30,18 +30,12 @@ a{text-decoration:none;color:inherit}
 .cta-btn{background:#191919;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:13.5px;font-weight:600;letter-spacing:-.01em;transition:opacity .15s}
 .cta-btn:hover{opacity:.85}
 
-/* Dropdown */
-.dropdown{position:relative}
-.dropdown-panel{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,.08);box-shadow:0 8px 32px rgba(0,0,0,.1),0 1px 3px rgba(0,0,0,.05);padding:8px;width:320px;z-index:100;animation:fadeIn .15s ease}
-.dropdown.open .dropdown-panel{display:block}
-.dropdown-item{display:flex;gap:14px;padding:12px 14px;border-radius:8px;cursor:pointer;transition:background .12s}
-.dropdown-item:hover{background:#F7F6F3}
-.dropdown-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.dropdown-sep{height:1px;background:rgba(0,0,0,.06);margin:4px 14px}
-.chevron{transition:transform .2s}
-.dropdown.open .chevron{transform:rotate(180deg)}
-
-@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+/* Back button */
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:#787774;background:none;border:none;cursor:pointer;padding:0;margin-bottom:24px;transition:color .15s;text-align:left}
+.back-btn:hover{color:#191919}
+.back-btn svg{transition:transform .15s;flex-shrink:0}
+.back-btn:hover svg{transform:translateX(-3px)}
+.page-hero .container{text-align:left}
 
 /* SECTIONS */
 .section{padding:80px 0}.container{max-width:1120px;margin:0 auto;padding:0 24px}
@@ -222,33 +216,12 @@ footer{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:48px 0 32px}
   <div class="nav-inner">
     <div class="nav-left">
       <div class="nav-logo" onclick="navigate('home')">
-        <svg width="28" height="28" viewBox="0 0 100 100" fill="none"><path d="M6.017 4.313l55.333-4.087c6.797-.583 8.543-.19 12.817 2.917l17.663 12.443c2.913 2.14 3.883 2.723 3.883 5.053v68.243c0 4.277-1.553 6.807-6.99 7.193L24.467 99.967c-4.08.193-6.023-.39-8.16-3.113L3.3 79.94c-2.333-3.113-3.3-5.443-3.3-8.167V11.113c0-3.497 1.553-6.413 6.017-6.8z" fill="#fff"/><path d="M61.35.227l-55.333 4.087C1.553 4.7 0 7.617 0 11.113v60.66c0 2.723.967 5.053 3.3 8.167l12.997 16.913c2.137 2.723 4.08 3.307 8.16 3.113l64.257-3.89c5.433-.387 6.99-2.917 6.99-7.193V20.64c0-2.21-.81-2.803-3.16-4.53l-.723-.523-17.663-12.443C70.893.037 69.147-.357 62.35.227h-1zm1.857 14.58c.19 0 .36.033.497.09l20.99 3.437c.387.193.677.58.677.967v48.29c0 .58-.29 1.163-.87 1.163l-28.55 1.747c-.387.193-.58.193-.967 0l-3.497-2.917c-.387-.387-.583-.58-.583-.967V21.25c0-.387.193-.773.58-.967L60.51 15c.387-.193.58-.193.773-.193h1.923zM78.33 26.58c0 .58-.29 1.067-.87 1.163l-3.69.677v35.487c-3.207 1.747-6.127 2.723-8.66 2.723-3.983 0-5.053-1.267-8.063-4.957l-15.523-24.347v23.57l7.57 1.743s0 1.163-1.553 1.163l-8.543.487c-.193-.387 0-.967.483-1.163l2.237-.58V31.443l-3.11-.193c-.387-.387-.193-.967.29-1.163l9.413-.677 16.14 24.733V31.637l-6.22-.677c-.193-.58.29-1.163.773-1.163l8.543-.58z" fill="#000"/></svg>
+        <img src="https://www.notion.so/images/favicon.ico" width="24" height="24" alt="Notion" style="border-radius:4px;display:block">
         <span>NotionSetup</span>
       </div>
       <div class="nav-links">
-        <div class="dropdown" id="prodDropdown">
-          <button class="nav-btn" onclick="event.stopPropagation();toggleDropdown()">
-            <span data-t="nav.products"></span>
-            <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5l3 3 3-3" stroke="#787774" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <div class="dropdown-panel">
-            <div class="dropdown-item" onclick="navigate('b2b');closeDropdown()">
-              <div class="dropdown-icon" style="background:linear-gradient(135deg,#D3E5EF,#2383E220)">🏢</div>
-              <div>
-                <div style="font-size:14px;font-weight:600;color:#191919;margin-bottom:2px" data-t="nav.business"></div>
-                <div style="font-size:12px;color:#787774;line-height:1.4" data-t="dropdown.b2b_desc"></div>
-              </div>
-            </div>
-            <div class="dropdown-sep"></div>
-            <div class="dropdown-item" onclick="navigate('b2c');closeDropdown()">
-              <div class="dropdown-icon" style="background:linear-gradient(135deg,#FADEC9,#D9730D20)">✨</div>
-              <div>
-                <div style="font-size:14px;font-weight:600;color:#191919;margin-bottom:2px" data-t="nav.personal"></div>
-                <div style="font-size:12px;color:#787774;line-height:1.4" data-t="dropdown.b2c_desc"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <button class="nav-btn" onclick="navigate('b2b')" data-t="nav.consulting"></button>
+        <button class="nav-btn" onclick="navigate('b2c')" data-t="nav.templates"></button>
         <button class="nav-btn" onclick="navigate('cases')" data-t="nav.cases"></button>
         <button class="nav-btn" onclick="navigate('home','about')" data-t="nav.about"></button>
       </div>
@@ -266,13 +239,13 @@ footer{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:48px 0 32px}
 <!-- ============ HOME PAGE ============ -->
 <div class="page active" id="page-home">
 
-  <!-- HERO — ИЗМЕНЕНИЕ 1: убран badge "Notion Certified Partner" -->
+  <!-- HERO -->
   <section class="hero">
     <div class="container">
-      <h1><span data-t="hero.title"></span><br><span data-t="hero.titleAlt"></span></h1>
+      <h1><span data-t="hero.title"></span><br><span style="color:#2383E2" data-t="hero.titleBlue"></span></h1>
       <p data-t="hero.subtitle"></p>
       <div class="btn-row">
-        <button class="btn-primary" onclick="scrollTo('#cta')"><span data-t="hero.cta1"></span> <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="btn-primary" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})"><span data-t="hero.cta1"></span> <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <button class="btn-secondary" onclick="navigate('cases')" data-t="hero.cta2"></button>
       </div>
     </div>
@@ -367,6 +340,10 @@ footer{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:48px 0 32px}
 <div class="page" id="page-b2b">
   <section class="page-hero" style="background:linear-gradient(180deg,#fff,#D3E5EF40)">
     <div class="container" style="max-width:700px">
+      <button class="back-btn" onclick="navigate('home')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span data-t="nav.back"></span>
+      </button>
       <div class="page-badge" style="background:rgba(35,131,226,.08);color:#2383E2">🏢 B2B</div>
       <h1 data-t="b2b.hero"></h1>
       <p data-t="b2b.heroSub"></p>
@@ -383,6 +360,10 @@ footer{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:48px 0 32px}
 <div class="page" id="page-b2c">
   <section class="page-hero" style="background:linear-gradient(180deg,#fff,#FADEC940)">
     <div class="container" style="max-width:700px">
+      <button class="back-btn" onclick="navigate('home')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span data-t="nav.back"></span>
+      </button>
       <div class="page-badge" style="background:rgba(217,115,13,.1);color:#D9730D">✨ B2C</div>
       <h1 data-t="b2c.hero"></h1>
       <p data-t="b2c.heroSub"></p>
@@ -406,6 +387,10 @@ footer{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:48px 0 32px}
 <div class="page" id="page-cases">
   <section class="page-hero" style="background:linear-gradient(180deg,#fff,#DBEDDB40)">
     <div class="container" style="max-width:700px">
+      <button class="back-btn" onclick="navigate('home')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span data-t="nav.back"></span>
+      </button>
       <div class="page-badge" style="background:rgba(15,123,108,.08);color:#0F7B6C">📖 <span data-t="cases.label"></span></div>
       <h1 data-t="cases.title"></h1>
       <p data-t="cases.fullSub"></p>
@@ -414,19 +399,31 @@ footer{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:48px 0 32px}
   <section style="padding:40px 0 80px;background:#fff"><div class="container" style="max-width:800px" id="fullCases"></div></section>
 </div>
 
-<!-- SHARED CONTACT -->
+<!-- SHARED CONTACT — Google Forms -->
 <section class="contact" id="contactSection">
   <div class="contact-inner container">
     <h2 data-t="cta.title"></h2>
     <p data-t="cta.subtitle"></p>
-    <div class="contact-form">
-      <input type="text" id="formName" data-ph="cta.name">
-      <input type="tel" id="formPhone" data-ph="cta.phone">
-      <button onclick="submitForm()" id="submitBtn" data-t="cta.submit"></button>
-      <p class="contact-note" data-t="cta.note"></p>
+    <div id="cta-form" style="margin-top:24px">
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:480px;margin:0 auto">
+        <input type="text" id="f-name" data-ph="cta.name" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(0,0,0,.1);font-size:15px;background:#F7F6F3;color:#191919;font-family:inherit;transition:border .2s;outline:none">
+        <input type="text" id="f-wa" data-ph="cta.phone" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(0,0,0,.1);font-size:15px;background:#F7F6F3;color:#191919;font-family:inherit;transition:border .2s;outline:none">
+        <input type="text" id="f-biz" data-ph="cta.biz" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(0,0,0,.1);font-size:15px;background:#F7F6F3;color:#191919;font-family:inherit;transition:border .2s;outline:none">
+        <button onclick="submitForm()" id="submitBtn" style="padding:13px 24px;border-radius:8px;border:none;background:#2383E2;color:#fff;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+          <span data-t="cta.submit"></span>
+          <svg id="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg id="btn-spinner" width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:none;animation:spin .8s linear infinite"><circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,.3)" stroke-width="2"/><path d="M8 2a6 6 0 016 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <p id="form-status" style="display:none;text-align:center;font-size:14px;margin-top:4px"></p>
+        <p style="font-size:12px;color:#B4B4B0;text-align:center" data-t="cta.note"></p>
+      </div>
     </div>
   </div>
 </section>
+<style>
+@keyframes spin{to{transform:rotate(360deg)}}
+#f-name:focus,#f-wa:focus,#f-biz:focus{border-color:#2383E2!important}
+</style>
 
 <!-- FOOTER — ИЗМЕНЕНИЕ 3: убраны ссылки на соцсети -->
 <footer>
@@ -439,9 +436,9 @@ footer{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:48px 0 32px}
         </div>
         <p data-t="footer.desc"></p>
       </div>
-      <div class="footer-col"><h4 data-t="footer.services"></h4><p>Аудит</p><p>Внедрение</p><p>AI</p><p>Обучение</p><p>Шаблоны</p></div>
-      <div class="footer-col"><h4 data-t="footer.company"></h4><p onclick="navigate('cases')" data-t="nav.cases"></p><p onclick="navigate('home','about')" data-t="nav.about"></p><p>Blog</p></div>
-      <div class="footer-col"><h4 data-t="footer.contact"></h4><p>Telegram: @notionsetup</p><p>hello@notionsetup.kz</p></div>
+      <div class="footer-col"><h4 data-t="footer.services"></h4><p onclick="navigate('b2b')" data-t="footer.s1"></p><p onclick="navigate('b2b')" data-t="footer.s2"></p><p onclick="navigate('b2b')" data-t="footer.s3"></p><p onclick="navigate('b2b')" data-t="footer.s4"></p><p onclick="navigate('b2c')" data-t="footer.s5"></p></div>
+      <div class="footer-col"><h4 data-t="footer.company"></h4><p onclick="navigate('cases')" data-t="nav.cases"></p><p onclick="navigate('home','about')" data-t="nav.about"></p><p onclick="navigate('home')" data-t="footer.blog"></p></div>
+      <div class="footer-col"><h4 data-t="footer.contact"></h4><p>Telegram: @notionsetup</p><p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="98f0fdf4f4f7d8f6f7ecf1f7f6ebfdecede8b6f3e2">[email&#160;protected]</a></p></div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 NotionSetup. <span data-t="footer.disclaimer"></span></span>
@@ -450,43 +447,47 @@ footer{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:48px 0 32px}
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const T={
 ru:{
-"nav.products":"Продукты","nav.business":"Для бизнеса","nav.personal":"Для всех","nav.cases":"Кейсы","nav.about":"О нас","nav.cta":"Обсудить проект",
-"dropdown.b2b_desc":"Консалтинг, внедрение, обучение команд","dropdown.b2c_desc":"Готовые шаблоны, курсы, гайды",
-"hero.title":"Ваш бизнес.","hero.titleAlt":"Ваша система.",
-"hero.subtitle":"Строим рабочие пространства в Notion, которые объединяют команду, автоматизируют рутину и наводят порядок в хаосе.",
-"hero.cta1":"Обсудить проект","hero.cta2":"Смотреть кейсы",
+"nav.consulting":"Консалтинг","nav.templates":"Шаблоны","nav.cases":"Кейсы","nav.about":"О нас","nav.cta":"Бесплатный звонок","nav.back":"На главную",
+"hero.title":"Строим Notion-системы,","hero.titleBlue":"которые экономят 5–10 часов в неделю",
+"hero.subtitle":"Для команд в Казахстане — наводим порядок в процессах, автоматизируем рутину и избавляем от хаоса в Excel и чатах.",
+"hero.cta1":"Записаться на бесплатный звонок","hero.cta2":"Смотреть кейсы",
 "bento.label":"Что мы делаем",
 "process.label":"Как это работает","process.title":"От хаоса к системе за 4 шага",
 "directions.label":"Два направления","directions.title":"Выберите свой путь",
 "cases.label":"Кейсы","cases.title":"Компании, которые уже работают в Notion","cases.allBtn":"Все кейсы","cases.fullSub":"Реальные истории компаний, которые навели порядок с Notion",
 "about.title":"Мы живём в Notion",
 "about.desc":"Notion — это не просто инструмент, который мы настраиваем. Это среда, в которой мы работаем каждый день. Этот опыт позволяет нам строить системы, которые действительно работают — не в теории, а на практике.",
-"cta.title":"Готовы навести порядок?","cta.subtitle":"Запишитесь на бесплатный 30-минутный звонок. Разберёмся в процессах и покажем, как Notion может всё изменить.",
-"cta.name":"Имя","cta.phone":"Телефон","cta.submit":"Отправить заявку","cta.note":"Ответим в течение 24 часов",
+"cta.title":"Оставьте заявку","cta.subtitle":"Разберём ваши процессы, покажем где Notion сэкономит больше всего времени — и честно скажем, поможем ли мы. Без давления и продаж.",
+"cta.name":"Ваше имя","cta.phone":"WhatsApp / Telegram","cta.biz":"Чем занимается бизнес",
+"cta.submit":"Отправить заявку","cta.note":"Ответим в течение 24 часов · Никакого спама",
+"cta.success":"Заявка отправлена!","cta.successSub":"Мы напишем вам в течение 24 часов.","cta.error":"Что-то пошло не так. Попробуйте ещё раз.",
 "footer.desc":"Консалтинг и внедрение Notion для бизнеса и частных клиентов.","footer.services":"Услуги","footer.company":"Компания","footer.contact":"Контакты","footer.disclaimer":"Не аффилирован с Notion Labs Inc.",
+"footer.s1":"Аудит","footer.s2":"Внедрение","footer.s3":"AI","footer.s4":"Обучение","footer.s5":"Шаблоны","footer.blog":"Блог",
 "b2b.hero":"Notion для бизнеса","b2b.heroSub":"Строим операционные системы на базе Notion, которые масштабируются вместе с вашей командой.","b2b.whoTitle":"Для кого",
 "b2c.hero":"Шаблоны Notion","b2c.heroSub":"Готовые системы, которые работают. Скачай, адаптируй, пользуйся.",
 "b2c.free":"Бесплатно","b2c.premium":"Премиум","b2c.freeLabel":"Бесплатные шаблоны","b2c.freeSub":"Попробуйте наши лучшие шаблоны бесплатно. Без регистрации.","b2c.premLabel":"Премиум-системы","b2c.premSub":"Полноценные рабочие системы с автоматизациями, документацией и видеогайдами.",
 "result":"Результат","problem":"Проблема","solution":"Решение",
 },
 kz:{
-"nav.products":"Өнімдер","nav.business":"Бизнеске","nav.personal":"Барлығына","nav.cases":"Кейстер","nav.about":"Біз туралы","nav.cta":"Жобаны талқылау",
-"dropdown.b2b_desc":"Консалтинг, енгізу, командаларды оқыту","dropdown.b2c_desc":"Дайын үлгілер, курстар, нұсқаулықтар",
-"hero.title":"Сіздің бизнес.","hero.titleAlt":"Сіздің жүйе.",
-"hero.subtitle":"Notion-да жұмыс кеңістіктерін құрамыз — команданы біріктіреміз, күнделікті жұмысты автоматтандырамыз, тәртіп орнатамыз.",
-"hero.cta1":"Жобаны талқылау","hero.cta2":"Кейстерді көру",
+"nav.consulting":"Консалтинг","nav.templates":"Үлгілер","nav.cases":"Кейстер","nav.about":"Біз туралы","nav.cta":"Тегін қоңырау","nav.back":"Басты бетке",
+"hero.title":"Аптасына 5–10 сағат үнемдейтін,","hero.titleBlue":"Notion жүйелерін құрамыз",
+"hero.subtitle":"Қазақстандағы командалар үшін — процестерге тәртіп орнатамыз, рутинаны автоматтандырамыз, Excel мен чаттардағы хаосты жоямыз.",
+"hero.cta1":"Тегін қоңырауға жазылу","hero.cta2":"Кейстерді көру",
 "bento.label":"Біз не істейміз",
 "process.label":"Қалай жұмыс істейді","process.title":"Хаостан жүйеге 4 қадамда",
 "directions.label":"Екі бағыт","directions.title":"Өз жолыңызды таңдаңыз",
 "cases.label":"Кейстер","cases.title":"Notion-да жұмыс істеп жатқан компаниялар","cases.allBtn":"Барлық кейстер","cases.fullSub":"Notion көмегімен тәртіп орнатқан компаниялардың нақты тарихтары",
 "about.title":"Біз Notion-да өмір сүреміз",
 "about.desc":"Notion — біз күн сайын жұмыс істейтін орта. Бұл тәжірибе бізге шынымен жұмыс істейтін жүйелер құруға мүмкіндік береді — теорияда емес, практикада.",
-"cta.title":"Тәртіп орнатуға дайынсыз ба?","cta.subtitle":"Тегін 30 минуттық қоңырауға жазылыңыз. Процестерді талдаймыз және Notion қалай көмектесетінін көрсетеміз.",
-"cta.name":"Аты","cta.phone":"Телефон","cta.submit":"Өтінім жіберу","cta.note":"24 сағат ішінде жауап береміз",
+"cta.title":"Өтінім қалдырыңыз","cta.subtitle":"Процестеріңізді талдаймыз, Notion қайда ең көп уақыт үнемдейтінін көрсетеміз — және шынайы айтамыз, көмектесе аламыз ба. Қысымсыз.",
+"cta.name":"Сіздің атыңыз","cta.phone":"WhatsApp / Telegram","cta.biz":"Бизнесіңіз туралы",
+"cta.submit":"Өтінім жіберу","cta.note":"24 сағат ішінде жауап береміз · Спам жоқ",
+"cta.success":"Өтінім жіберілді!","cta.successSub":"Біз сізге 24 сағат ішінде жазамыз.","cta.error":"Қате шықты. Қайталап көріңіз.",
 "footer.desc":"Бизнес және жеке клиенттерге арналған Notion консалтингі мен енгізу.","footer.services":"Қызметтер","footer.company":"Компания","footer.contact":"Байланыс","footer.disclaimer":"Notion Labs Inc. компаниясымен байланысты емес.",
+"footer.s1":"Аудит","footer.s2":"Енгізу","footer.s3":"AI","footer.s4":"Оқыту","footer.s5":"Үлгілер","footer.blog":"Блог",
 "b2b.hero":"Бизнеске арналған Notion","b2b.heroSub":"Notion негізінде командаңызбен бірге масштабталатын операциялық жүйелер құрамыз.","b2b.whoTitle":"Кімдерге",
 "b2c.hero":"Notion үлгілері","b2c.heroSub":"Жұмыс істейтін дайын жүйелер. Жүктеңіз, бейімдеңіз, пайдаланыңыз.",
 "b2c.free":"Тегін","b2c.premium":"Премиум","b2c.freeLabel":"Тегін үлгілер","b2c.freeSub":"Ең жақсы үлгілерімізді тегін қолданып көріңіз. Тіркелусіз.","b2c.premLabel":"Премиум-жүйелер","b2c.premSub":"Автоматтандырулар, құжаттама және бейне нұсқаулықтар қамтылған толыққанды жұмыс жүйелері.",
@@ -591,13 +592,23 @@ function applyTranslations(){
   document.querySelectorAll('[data-ph]').forEach(el=>{
     el.placeholder=gt(el.getAttribute('data-ph'));
   });
+  // Обновляем placeholder у полей формы
+  const fn=document.getElementById('f-name');
+  const fw=document.getElementById('f-wa');
+  const fb=document.getElementById('f-biz');
+  if(fn) fn.placeholder=gt('cta.name');
+  if(fw) fw.placeholder=gt('cta.phone');
+  if(fb) fb.placeholder=gt('cta.biz');
   document.getElementById('langLabel').textContent=lang==='ru'?'KZ':'RU';
 }
 
 function renderDynamic(){
   const l=lang;
   const bg=document.getElementById('bentoGrid');
-  bg.innerHTML=DATA.bento[l].map((b,i)=>`<div class="bento-card"><div class="bento-preview"><div class="bento-inner"><div class="bento-dots"><span style="background:#FF5F57"></span><span style="background:#FFBD2E"></span><span style="background:#28CA41"></span></div>${BENTO_PREVIEWS[i]}</div></div><div class="bento-text"><h3>${ICONS_BENTO[i]} ${b.title}</h3><p>${b.desc}</p></div></div>`).join('');
+  bg.innerHTML=DATA.bento[l].map((b,i)=>{
+    const dest=i<2?'b2b':'b2b';
+    return`<div class="bento-card" onclick="navigate('${dest}')"><div class="bento-preview"><div class="bento-inner"><div class="bento-dots"><span style="background:#FF5F57"></span><span style="background:#FFBD2E"></span><span style="background:#28CA41"></span></div>${BENTO_PREVIEWS[i]}</div></div><div class="bento-text"><h3>${ICONS_BENTO[i]} ${b.title}</h3><p>${b.desc}</p></div></div>`;
+  }).join('');
   const chatEl=document.getElementById('bentoChat');
   if(chatEl){
     const aiMsg=l==='ru'?'Создал отчёт по проектам за Q1. Нашёл 3 просроченных задачи.':'Q1 бойынша барлық жобалар есебін жасадым. 3 мерзімі өткен тапсырма таптым.';
@@ -621,11 +632,11 @@ function renderDynamic(){
   const cg=document.getElementById('casesGrid');
   const emojis=['🏢','🎓','🎬'];
   cg.innerHTML=DATA.cases[l].map((c,i)=>`<div class="case-card" onclick="navigate('cases')"><div class="case-strip" style="background:${c.color}"></div><div class="case-body"><div class="case-header"><div class="case-icon" style="background:${c.color}15">${emojis[i]}</div><div><div class="case-company">${c.company}</div><div class="case-industry">${c.industry}</div></div></div><div class="case-result" style="background:${c.color}08;border:1px solid ${c.color}15"><div class="case-result-label" style="color:${c.color}">${gt('result')}</div><div class="case-result-text">${c.result}</div></div><div class="case-quote">${AVATARS[i]}<div style="flex:1"><p>«${c.quote}»</p><span class="person">${c.person}</span></div></div></div></div>`).join('');
-  document.getElementById('b2bGrid').innerHTML=DATA.b2b[l].map(s=>`<div class="simple-card"><div class="icon">${s.icon}</div><h3>${s.title}</h3><p>${s.desc}</p></div>`).join('');
+  document.getElementById('b2bGrid').innerHTML=DATA.b2b[l].map(s=>`<div class="simple-card" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})"><div class="icon">${s.icon}</div><h3>${s.title}</h3><p>${s.desc}</p></div>`).join('');
   document.getElementById('b2bWho').innerHTML=DATA.b2bWho[l].map(w=>`<div class="who-item"><span style="color:#0F7B6C">${CHECK}</span><span>${w}</span></div>`).join('');
   const cats=DATA.b2c[l];const bgcolors=[['#D3E5EF60','#FADEC960','#E8DEEE60'],['#FDE68A40','#D3E5EF60','#DBEDDB60']];
-  document.getElementById('b2cFree').innerHTML=cats.slice(0,3).map((c,i)=>`<div class="template-card"><div class="template-icon" style="background:${bgcolors[0][i]}">${c.icon}</div><div class="info"><h3>${c.name}</h3><p>${c.desc}</p></div></div>`).join('');
-  document.getElementById('b2cPrem').innerHTML=cats.slice(3).map((c,i)=>`<div class="template-card"><div class="template-icon" style="background:${bgcolors[1][i]}">${c.icon}</div><div class="info"><h3>${c.name}</h3><p>${c.desc}</p></div></div>`).join('');
+  document.getElementById('b2cFree').innerHTML=cats.slice(0,3).map((c,i)=>`<div class="template-card" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})"><div class="template-icon" style="background:${bgcolors[0][i]}">${c.icon}</div><div class="info"><h3>${c.name}</h3><p>${c.desc}</p></div></div>`).join('');
+  document.getElementById('b2cPrem').innerHTML=cats.slice(3).map((c,i)=>`<div class="template-card" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})"><div class="template-icon" style="background:${bgcolors[1][i]}">${c.icon}</div><div class="info"><h3>${c.name}</h3><p>${c.desc}</p></div></div>`).join('');
   const fc=document.getElementById('fullCases');
   const bigAvatars=AVATARS.map(a=>a.replace(/width="36"/g,'width="44"').replace(/height="36"/g,'height="44"').replace(/r="18"/g,'r="22"'));
   fc.innerHTML=DATA.cases[l].map((c,i)=>`<div class="full-case"><div class="full-case-bar" style="background:${c.color}"></div><div class="full-case-body"><div class="full-case-header">${bigAvatars[i]}<div><h3 style="font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:2px">${c.company}</h3><span style="font-size:14px;color:#787774">${c.industry}</span></div></div><div class="full-case-cols"><div class="full-case-col"><div class="col-label" style="color:#E03E3E">${gt('problem')}</div><p>${c.problem}</p></div><div class="full-case-col"><div class="col-label" style="color:#2383E2">${gt('solution')}</div><p>${c.solution}</p></div><div class="full-case-col"><div class="col-label" style="color:#0F7B6C">${gt('result')}</div><p>${c.result}</p></div></div><div class="full-case-quote" style="border-color:${c.color}"><p>«${c.quote}»</p><span class="person">${c.person}</span></div></div></div>`).join('');
@@ -642,26 +653,59 @@ function navigate(p,scrollTarget){
   page=p;
   if(scrollTarget){setTimeout(()=>document.getElementById(scrollTarget)?.scrollIntoView({behavior:'smooth'}),100);}
   else{window.scrollTo({top:0,behavior:'smooth'});}
-  closeDropdown();
+}
+
+function submitForm(){
+  const name = document.getElementById('f-name').value.trim();
+  const wa   = document.getElementById('f-wa').value.trim();
+  const biz  = document.getElementById('f-biz').value.trim();
+  const btn  = document.getElementById('submitBtn');
+  const status = document.getElementById('form-status');
+
+  // Валидация
+  document.getElementById('f-name').style.borderColor = name ? 'rgba(0,0,0,.1)' : '#E03E3E';
+  document.getElementById('f-wa').style.borderColor   = wa   ? 'rgba(0,0,0,.1)' : '#E03E3E';
+  document.getElementById('f-biz').style.borderColor  = biz  ? 'rgba(0,0,0,.1)' : '#E03E3E';
+  if(!name || !wa || !biz) return;
+
+  // Загрузка
+  btn.disabled = true;
+  document.getElementById('btn-arrow').style.display = 'none';
+  document.getElementById('btn-spinner').style.display = 'block';
+  status.style.display = 'none';
+
+  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfJUHkJ6JjI5Q4WVviZptQQgPG_JkLHjogabmZsr0Dx9GQ59Q/formResponse';
+  const body = new URLSearchParams({
+    'entry.1474263680': name,
+    'entry.1503041090': wa,
+    'entry.772931919':  biz,
+  });
+
+  fetch(FORM_URL, { method:'POST', mode:'no-cors', body })
+    .then(() => {
+      // Успех
+      document.getElementById('cta-form').innerHTML = `
+        <div style="text-align:center;padding:32px 0">
+          <div style="width:56px;height:56px;background:#DBEDDB;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="#0F7B6C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <p style="font-size:18px;font-weight:700;color:#191919;margin-bottom:8px">${gt('cta.success')}</p>
+          <p style="font-size:15px;color:#787774">${gt('cta.successSub')}</p>
+        </div>`;
+    })
+    .catch(() => {
+      btn.disabled = false;
+      document.getElementById('btn-arrow').style.display = 'block';
+      document.getElementById('btn-spinner').style.display = 'none';
+      status.style.display = 'block';
+      status.style.color = '#E03E3E';
+      status.textContent = gt('cta.error');
+    });
 }
 
 function toggleLang(){
   lang=lang==='ru'?'kz':'ru';
   applyTranslations();renderDynamic();
-}
-
-function toggleDropdown(){document.getElementById('prodDropdown').classList.toggle('open')}
-function closeDropdown(){document.getElementById('prodDropdown').classList.remove('open')}
-document.addEventListener('click',closeDropdown);
-
-function submitForm(){
-  const n=document.getElementById('formName').value;
-  const p=document.getElementById('formPhone').value;
-  if(n&&p){
-    const btn=document.getElementById('submitBtn');btn.textContent='✓';
-    document.getElementById('formName').value='';document.getElementById('formPhone').value='';
-    setTimeout(()=>{btn.textContent=gt('cta.submit')},3000);
-  }
 }
 
 window.addEventListener('scroll',()=>{
